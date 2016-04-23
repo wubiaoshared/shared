@@ -18,9 +18,16 @@ from tldextract import extract
 import pytz
 from xml.dom import minidom
 import random
+
 #domain<=5
+###config
 domains = ["collegesphere.co.in","theganchimuslimhospital.in","edusocial.in"] 
-st = datetime.datetime.strptime("2016-04-24 04:00:00", "%Y-%m-%d %H:%M:%S")
+customerid="14663552"
+contactid="53312520"
+starttime="2016-04-24 04:00:00"
+###config
+
+st = datetime.datetime.strptime(starttime, "%Y-%m-%d %H:%M:%S")
 tz = pytz.timezone('Asia/Shanghai') 
 st = tz.localize(st)
 class regThread(threading.Thread):
@@ -31,7 +38,7 @@ class regThread(threading.Thread):
     def run(self):
         subdomain, maindomain, tld = extract(self.domain)
 
-        regurl = "https://test.httpapi.com/api/domains/register.xml?auth-userid=646061&api-key=sP6NPKSyagaoitKcihSlMMdAEmot3zFq&domain-name=" + self.domain + "&years=1&ns=ns1.domain.com&ns=ns2.domain.com&customer-id=14663552&reg-contact-id=53312520&admin-contact-id=53312520&tech-contact-id=53312520&billing-contact-id=53312520&invoice-option=PayInvoice"
+        regurl = "https://test.httpapi.com/api/domains/register.xml?auth-userid=646061&api-key=sP6NPKSyagaoitKcihSlMMdAEmot3zFq&domain-name=" + self.domain + "&years=1&ns=ns1.domain.com&ns=ns2.domain.com&customer-id="+ customerid +"&reg-contact-id="+contactid+"&admin-contact-id="+contactid+"&tech-contact-id="+contactid+"&billing-contact-id="+contactid+"&invoice-option=PayInvoice"
 
 
         def reg():
@@ -120,7 +127,7 @@ def register(domains):
             if status and status.lower == 'unknown':
                 t = regThread(domain)
                 t.start()
-                
+
             if status and status.lower() == 'available':
                 print("available", domain)
                 t = regThread(domain)
