@@ -17,8 +17,8 @@ import  json
 from tldextract import extract
 import pytz
 from xml.dom import minidom
-domains = ["collegesphere.co.in", "theganchimuslimhospital.in", "edusocial.in"] 
-st = datetime.datetime.strptime("2016-04-24 04:00:00", "%Y-%m-%d %H:%M:%S")
+domains = ["sch.org.in"] 
+st = datetime.datetime.strptime("2016-04-27 04:00:00", "%Y-%m-%d %H:%M:%S")
 tz = pytz.timezone('Asia/Shanghai') 
 st = tz.localize(st)
 class regThread(threading.Thread):
@@ -49,7 +49,7 @@ class regThread(threading.Thread):
 
                     print("try again!")
                 j = j + 1
-                if(j >= 5):
+                if(j >= 4):
                     break
 
         def checksuccess(xml):
@@ -117,7 +117,7 @@ def register(domains):
                 t.start()
                 domains.remove(domain)
 
-            time.sleep(1.8)
+            time.sleep(1.5)
         # time.sleep(0.5)
         if(len(domains) == 0):
             break
@@ -127,9 +127,9 @@ def register(domains):
 
         tm = (t2 - t1).seconds / (60)
 
-        if(tm >= 10) :
+        if(tm >= 50) :
             time.sleep(30)
-            if(tm >= 50):
+            if(tm >= 60):
                 break
         i = i + 1   
 
