@@ -15,8 +15,8 @@ import datetime
 import os
 import pytz
 from xml.dom import minidom
-domains = ["rimsschool.in", "jainhospital.in"] 
-st = datetime.datetime.strptime("2016-04-28 04:00:00", "%Y-%m-%d %H:%M:%S")
+domains = ["omshanti-painclinic.in", "saurabhgupta.in"] 
+st = datetime.datetime.strptime("2016-06-06 04:00:00", "%Y-%m-%d %H:%M:%S")
 tz = pytz.timezone('Asia/Shanghai') 
 st = tz.localize(st)
 class regThread(threading.Thread):
@@ -36,9 +36,9 @@ class regThread(threading.Thread):
                 
               
                     
-                req = requests.get(regurl,timeout=5)
+                req = requests.get(regurl,timeout=30)
     
-                print(req.text)
+                #print(req.text)
                 if(checksuccess(req.text)):
                     print(self.domain, "sale sucessful")
                     break
@@ -52,15 +52,15 @@ class regThread(threading.Thread):
                 if(i >= 200) :
                     break
                 i = i + 1    
-                if(tm >= 0 and tm < 1):
+                if(tm >= 0 and tm < 0.5):
                     time.sleep(10)
-                elif(tm >= 1 and tm < 2.5):
+                elif(tm >= 0.5 and tm < 3.2):
                     time.sleep(1)
-                elif(tm >= 2.5 and tm < 3):
+                elif(tm >= 3.2 and tm < 4):
                     time.sleep(10)    
-                elif(tm >= 3 and tm < 5):
-                    time.sleep(5)    
-                elif(tm >= 5 and tm < 6):
+                elif(tm >= 4 and tm < 5.5):
+                    time.sleep(10)    
+                elif(tm >= 5.5 and tm < 6):
                     time.sleep(1)
                 elif(tm >= 6 and tm < 10):
                     time.sleep(30)
