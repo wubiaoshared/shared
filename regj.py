@@ -107,15 +107,7 @@ def checktime():
         time.sleep(60)
     print ("multi thread to regist")
 
-def regDomains(domains):
-        threads=[]
-        for i in domains:
-            threads.append(regThread(i))
-        for t in threads:
-            t.setDaemon(True)
-            t.start()
-        for t in threads:
-            t.join()
+
 
 if __name__ == '__main__':
 
