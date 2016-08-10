@@ -13,19 +13,20 @@ import json
 import sys
 
 
-domains = ["rimsschool.in", "jainhospital.in"]
-username = 'wubiao239'
-api_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGl0IjoxMjg2ODYyLCJleHAiOjE3ODU4NTc1NDQsImp0aSI6MX0.0LxzVX1mUa9Tg6i296mk80RtO047jaL6mgRyV9316bY'
+domains = ["rimsschool.pw"]
 
 stime="03:57:00"
-etime="21:04:00"
+etime="04:04:00"
+
+
 strday=time.strftime('%Y-%m-%d', time.gmtime())
 tz = pytz.timezone('Asia/Shanghai')
 
 #使用API登录name
 class Login:
-    username = ""
-    api_token = ""
+    username = 'wubiao239'
+    api_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGl0IjoxMjg2ODYyLCJleHAiOjE3ODU4NTc1NDQsImp0aSI6MX0.0LxzVX1mUa9Tg6i296mk80RtO047jaL6mgRyV9316bY'
+
     session_token = ""
 
     def __init__(self):
@@ -37,6 +38,7 @@ class Login:
         # res=requests.get("https://api.dev.name.com/api/account/get");
 
         self.session_token = json.loads(res.text)['session_token']
+        # print(res.text)
 
 
 
@@ -46,19 +48,19 @@ class API(Login):
 
     nameservers = ['ns1.name.com', 'ns2.name.com', 'ns3.name.com', 'ns4.name.com']
     contacts = {'type': ['registrant', 'administrative', 'technical', 'billing'],
-                                'first_name': 'John',
-                                'last_name': 'Doe',
-                                'organization': 'Name.com',
-                    'address_1': '100 Main St.',
-                                'address_2': 'Suite 300',
-                                'city': 'Denver',
-                    'state': 'CO',
-                                'zip': '80230',
-                                'country': 'US',
-                                'phone': '+1.3035555555',
-                    'fax': '+1.3035555556',
-                                'email': 'john@example.net',
-                    }
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'organization': 'Name.com',
+            'address_1': '100 Main St.',
+            'address_2': 'Suite 300',
+            'city': 'Denver',
+            'state': 'CO',
+            'zip': '80230',
+            'country': 'US',
+            'phone': '+1.3035555555',
+            'fax': '+1.3035555556',
+            'email': 'h8964249jiahuan@163.com',
+            }
 
     def __init__(self):
 
@@ -68,10 +70,10 @@ class API(Login):
     #使用API注册域名
     def reg(self, domain):
         param = {'domain_name' : domain,
-                    'period' : 1 ,
-                    'nameservers': self.nameservers,
-                    'contacts': self.contacts,
-               }
+                'period' : 1 ,
+                'nameservers': self.nameservers,
+                'contacts': self.contacts,
+                }
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
         res = requests.session().post("https://api.name.com/api/domain/create", data=json.dumps(param), headers=headers, timeout=10)
         code = json.loads(res.text)['result']['code']
@@ -90,8 +92,8 @@ class regThread(threading.Thread):
 
         def doreg():
             api = API()
-            api.username = username
-            api.api_token = api_token
+#             api.username = username
+#             api.api_token = api_token
             api.login()
             i = 1
             t1 = datetime.datetime.now(tz)
@@ -102,6 +104,7 @@ class regThread(threading.Thread):
 
                 if(req):
                     print(self.domain, "sale sucessful")
+                    #time.sleep(5*60)
                     break
 
 
@@ -116,8 +119,8 @@ class regThread(threading.Thread):
                     break
                 #控制请求次数，当请求次数大于200次时休眠五分钟
                 if(i >= 200) :
-                    time.sleep(60*5)
-                    
+                    #time.sleep(60*5)
+                    break
                 time.sleep(1)
                 i = i + 1
                 #控制请求次数，十分钟内不同时间请求次数快慢变化
@@ -125,14 +128,16 @@ class regThread(threading.Thread):
                     time.sleep(3)
                 elif(tm >= 1 and tm < 3):
                     time.sleep(1)
-  
+
                 elif(tm >= 3 and tm < 5):
                     time.sleep(1)
                 elif(tm >= 5 and tm < 6):
                     time.sleep(1)
                 elif(tm >= 6 and tm < 10):
                     time.sleep(5)
-  
+                else:
+                    break
+            domains.remove(self.domain)
 
         doreg()
 
@@ -151,8 +156,13 @@ def checktime():
         now = datetime.datetime.now(tz)
 
         if now >= st and now<=et:
-            print("regist now:", now)
-            regDomains(domains)
+
+            if(len(domains)>=1):
+                print("regist now:", now)
+                regDomains(domains)
+            else:
+                print("no domains register")
+
         else:
             print("time:", now, "try it later")
         time.sleep(60)
@@ -169,11 +179,12 @@ def regDomains(domains):
     for t in threads:
         t.join()
 
+
 if __name__ == '__main__':
 
     checktime()
-    
-    
+
+
 
 
 
