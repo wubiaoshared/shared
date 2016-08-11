@@ -11,18 +11,18 @@ import datetime
 import pytz
 import json
 import sys
+from tldextract import extract
+import sql
+
+domains = []
+
+stime = "03:56:00"
+etime = "04:04:00"
 
 
-domains = ["rimsschool.pw"]
-
-stime="03:57:00"
-etime="04:04:00"
-
-
-strday=time.strftime('%Y-%m-%d', time.gmtime())
 tz = pytz.timezone('Asia/Shanghai')
-
-#使用API登录name
+# strday=datetime.datetime.now(tz).strftime('%Y-%m-%d')
+# 使用API登录name
 class Login:
     username = 'wubiao239'
     api_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGl0IjoxMjg2ODYyLCJleHAiOjE3ODU4NTc1NDQsImp0aSI6MX0.0LxzVX1mUa9Tg6i296mk80RtO047jaL6mgRyV9316bY'
@@ -39,8 +39,6 @@ class Login:
 
         self.session_token = json.loads(res.text)['session_token']
         # print(res.text)
-
-
 
 class API(Login):
     # username='wubiao239-ote';
@@ -67,7 +65,29 @@ class API(Login):
         pass
 
     # res=requests.session().get("https://api.name.com/api//account/get ",headers=headers)
-    #使用API注册域名
+    # 
+    # 使用API注册域名
+    def check(self, domain):
+        subdomain, maindomain, tld = extract(domain)
+        param = {"keyword":maindomain, "tlds":[tld], "services":["availability", "suggested"]}
+        headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
+        res = requests.session().post("https://api.name.com/api/domain/check", data=json.dumps(param), headers=headers, timeout=10)
+        print(res.text)
+        try:
+            result = json.loads(res.text)['domains'][domain]['avail']
+            print(result)
+        except:
+            print("tlds not find")
+            return False
+        
+        if(result):
+            print(domain + " check success")
+            return True
+        else:
+            print(domain + " check fail")
+            return False
+
+    # 使用API注册域名
     def reg(self, domain):
         param = {'domain_name' : domain,
                 'period' : 1 ,
@@ -82,7 +102,7 @@ class API(Login):
             return True
         else:
             return False
-#使用多线程注册
+# 使用多线程注册
 class regThread(threading.Thread):
     def __init__(self, domain):
         threading.Thread.__init__(self)
@@ -97,33 +117,42 @@ class regThread(threading.Thread):
             api.login()
             i = 1
             t1 = datetime.datetime.now(tz)
+            strday = datetime.datetime.now(tz).strftime('%Y-%m-%d')
+            et = datetime.datetime.strptime(strday + " " + etime, "%Y-%m-%d %H:%M:%S")
+            et = tz.localize(et)
+            st = datetime.datetime.strptime(strday + " " + stime, "%Y-%m-%d %H:%M:%S")
+            st = tz.localize(st)
+            tm = (et - st).seconds
             print(self.domain, "now:", t1, "start request")
             while 1 :
 
-                req = api.reg(self.domain)
+                req = api.check(self.domain)
+                
 
                 if(req):
-                    print(self.domain, "sale sucessful")
-                    #time.sleep(5*60)
+                    for j in range(1,2):
+                        res = api.reg(self.domain)
+                        if(res):
+                            print(self.domain, "sale sucessful")
+                            break
+     
+                    
                     break
-
-
 
                 t2 = datetime.datetime.now(tz)
                 print(self.domain, "register time", t2, "requests", i, "times")
                 tm = (t2 - t1).seconds / (60)
-                et = datetime.datetime.strptime(strday+" "+etime, "%Y-%m-%d %H:%M:%S")
-                et = tz.localize(et)
-                #控制时间当到结束时间时跳出循环
-                if(t2>=et):
+                
+                # 控制时间当到结束时间时跳出循环
+                if(t2 >= et):
                     break
-                #控制请求次数，当请求次数大于200次时休眠五分钟
+                # 控制请求次数，当请求次数大于200次时休眠五分钟
                 if(i >= 200) :
-                    #time.sleep(60*5)
+                    
                     break
                 time.sleep(1)
                 i = i + 1
-                #控制请求次数，十分钟内不同时间请求次数快慢变化
+                # 控制请求次数，十分钟内不同时间请求次数快慢变化
                 if(tm >= 0 and tm < 1):
                     time.sleep(3)
                 elif(tm >= 1 and tm < 3):
@@ -137,8 +166,8 @@ class regThread(threading.Thread):
                     time.sleep(5)
                 else:
                     break
-            domains.remove(self.domain)
-
+            
+            time.sleep(tm)
         doreg()
 
 
@@ -147,17 +176,21 @@ def checktime():
 
     while 1 :
 
-        #将字符转换为上海的当天时间
-        st = datetime.datetime.strptime(strday+" "+stime, "%Y-%m-%d %H:%M:%S")
-        et = datetime.datetime.strptime(strday+" "+etime, "%Y-%m-%d %H:%M:%S")
+        # 将字符转换为上海的当天时间
+        strday = datetime.datetime.now(tz).strftime('%Y-%m-%d')
+
+        st = datetime.datetime.strptime(strday + " " + stime, "%Y-%m-%d %H:%M:%S")
+        et = datetime.datetime.strptime(strday + " " + etime, "%Y-%m-%d %H:%M:%S")
         st = tz.localize(st)
         et = tz.localize(et)
-
+        # print(st)
+        # print(et)
         now = datetime.datetime.now(tz)
 
-        if now >= st and now<=et:
-
-            if(len(domains)>=1):
+        if now >= st and now <= et:
+            domains=sql.getDomains()
+#             print(domains)
+            if(len(domains) >= 1):
                 print("regist now:", now)
                 regDomains(domains)
             else:
@@ -168,9 +201,9 @@ def checktime():
         time.sleep(60)
     print ("multi thread to regist")
 
-#启动多线程
+# 启动多线程
 def regDomains(domains):
-    threads=[]
+    threads = []
     for i in domains:
         threads.append(regThread(i))
     for t in threads:
