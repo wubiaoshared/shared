@@ -45,20 +45,20 @@ class API(Login):
     # api_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGl0Ijo1NjE4NjgsImV4cCI6MTc4NTg1NzUzNiwianRpIjoxfQ.bMwNLDloRoOuhYPGvpGwl3dIYPkokIzU_FZrMgEmIL8';
 
     nameservers = ['ns1.name.com', 'ns2.name.com', 'ns3.name.com', 'ns4.name.com']
-    contacts = {'type': ['registrant', 'administrative', 'technical', 'billing'],
-            'first_name': 'John',
-            'last_name': 'Doe',
-            'organization': 'Name.com',
-            'address_1': '100 Main St.',
-            'address_2': 'Suite 300',
-            'city': 'Denver',
-            'state': 'CO',
-            'zip': '80230',
-            'country': 'US',
-            'phone': '+1.3035555555',
-            'fax': '+1.3035555556',
-            'email': 'h8964249jiahuan@163.com',
-            }
+    # contacts = {'type': ['registrant', 'administrative', 'technical', 'billing'],
+    #         'first_name': 'John',
+    #         'last_name': 'Doe',
+    #         'organization': 'Name.com',
+    #         'address_1': '100 Main St.',
+    #         'address_2': 'Suite 300',
+    #         'city': 'Denver',
+    #         'state': 'CO',
+    #         'zip': '80230',
+    #         'country': 'US',
+    #         'phone': '+1.3035555555',
+    #         'fax': '+1.3035555556',
+    #         'email': 'h8964249jiahuan@163.com',
+    #         }
 
     def __init__(self):
 
@@ -72,10 +72,10 @@ class API(Login):
         param = {"keyword":maindomain, "tlds":[tld], "services":["availability", "suggested"]}
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
         res = requests.session().post("https://api.name.com/api/domain/check", data=json.dumps(param), headers=headers, timeout=10)
-        print(res.text)
+        # print(res.text)
         try:
             result = json.loads(res.text)['domains'][domain]['avail']
-            print(result)
+            # print(result)
         except:
             print("tlds not find")
             return False
@@ -92,7 +92,7 @@ class API(Login):
         param = {'domain_name' : domain,
                 'period' : 1 ,
                 'nameservers': self.nameservers,
-                'contacts': self.contacts,
+                # 'contacts': self.contacts,
                 }
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
         res = requests.session().post("https://api.name.com/api/domain/create", data=json.dumps(param), headers=headers, timeout=10)
@@ -189,7 +189,7 @@ def checktime():
 
         if now >= st and now <= et:
             domains=sql.getDomains()
-#             print(domains)
+            # print(domains)
             if(len(domains) >= 1):
                 print("regist now:", now)
                 regDomains(domains)
