@@ -38,7 +38,7 @@ class Login:
         # res=requests.get("https://api.dev.name.com/api/account/get");
 
         self.session_token = json.loads(res.text)['session_token']
-        # print(res.text)
+        print(res.text)
 
 class API(Login):
     # username='wubiao239-ote';
@@ -72,10 +72,10 @@ class API(Login):
         param = {"keyword":maindomain, "tlds":[tld], "services":["availability", "suggested"]}
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
         res = requests.session().post("https://api.name.com/api/domain/check", data=json.dumps(param), headers=headers, timeout=10)
-        # print(res.text)
+        print(res.text)
         try:
             result = json.loads(res.text)['domains'][domain]['avail']
-            # print(result)
+            print(result)
         except:
             print("tlds not find")
             return False
@@ -189,7 +189,7 @@ def checktime():
 
         if now >= st and now <= et:
             domains=sql.getDomains()
-            # print(domains)
+            print(domains)
             if(len(domains) >= 1):
                 print("regist now:", now)
                 regDomains(domains)
