@@ -16,8 +16,8 @@ import sql
 
 domains = []
 
-stime = "03:56:00"
-etime = "04:04:00"
+stime = "03:57:00"
+etime = "04:07:00"
 
 
 tz = pytz.timezone('Asia/Shanghai')
@@ -45,7 +45,7 @@ class API(Login):
     # api_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGl0Ijo1NjE4NjgsImV4cCI6MTc4NTg1NzUzNiwianRpIjoxfQ.bMwNLDloRoOuhYPGvpGwl3dIYPkokIzU_FZrMgEmIL8';
 
     nameservers = ['ns1.name.com', 'ns2.name.com', 'ns3.name.com', 'ns4.name.com']
-    # contacts = {'type': ['registrant', 'administrative', 'technical', 'billing'],
+    # contacts = [{'type': ['registrant', 'administrative', 'technical', 'billing'],
     #         'first_name': 'John',
     #         'last_name': 'Doe',
     #         'organization': 'Name.com',
@@ -58,7 +58,7 @@ class API(Login):
     #         'phone': '+1.3035555555',
     #         'fax': '+1.3035555556',
     #         'email': 'h8964249jiahuan@163.com',
-    #         }
+    #         }]
 
     def __init__(self):
 
