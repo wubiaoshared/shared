@@ -15,9 +15,15 @@ import datetime
 import os
 import pytz
 from xml.dom import minidom
+<<<<<<< HEAD
+domains = ["omshanti-painclinic.in", "saurabhgupta.in"] 
+st = datetime.datetime.strptime("2016-06-06 04:00:00", "%Y-%m-%d %H:%M:%S")
+tz = pytz.timezone('Asia/Shanghai') 
+=======
 domains = ["ggi.ac.in", "bujhansiuniversity.in"]
 st = datetime.datetime.strptime("2016-06-24 04:00:00", "%Y-%m-%d %H:%M:%S")
 tz = pytz.timezone('Asia/Shanghai')
+>>>>>>> 5cf03cee413a2e6a22dd1c93284bcdea2a26a44a
 st = tz.localize(st)
 class regThread(threading.Thread):
     def __init__(self, domain):
@@ -33,11 +39,19 @@ class regThread(threading.Thread):
             t1 = datetime.datetime.now(tz)
             print(self.domain, "now:", t1, "start request")
             while 1 :
+<<<<<<< HEAD
+                
+              
+                    
+                req = requests.get(regurl,timeout=30)
+    
+=======
 
 
 
                 req = requests.get(regurl,timeout=30)
 
+>>>>>>> 5cf03cee413a2e6a22dd1c93284bcdea2a26a44a
                 #print(req.text)
                 if(checksuccess(req.text)):
                     print(self.domain, "sale sucessful")
@@ -51,15 +65,25 @@ class regThread(threading.Thread):
 
                 if(i >= 200) :
                     break
+<<<<<<< HEAD
+                i = i + 1    
+=======
                 i = i + 1
+>>>>>>> 5cf03cee413a2e6a22dd1c93284bcdea2a26a44a
                 if(tm >= 0 and tm < 0.5):
                     time.sleep(10)
                 elif(tm >= 0.5 and tm < 3.2):
                     time.sleep(1)
                 elif(tm >= 3.2 and tm < 4):
+<<<<<<< HEAD
+                    time.sleep(10)    
+                elif(tm >= 4 and tm < 5.5):
+                    time.sleep(10)    
+=======
                     time.sleep(10)
                 elif(tm >= 4 and tm < 5.5):
                     time.sleep(10)
+>>>>>>> 5cf03cee413a2e6a22dd1c93284bcdea2a26a44a
                 elif(tm >= 5.5 and tm < 6):
                     time.sleep(1)
                 elif(tm >= 6 and tm < 10):
