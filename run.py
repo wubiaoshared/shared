@@ -16,8 +16,8 @@ import sql
 
 
 
-stime = "03:58:00"
-etime = "19:06:00"
+stime = "04:00:00"
+etime = "04:06:00"
 
 
 tz = pytz.timezone('Asia/Shanghai')
@@ -46,8 +46,8 @@ class API(Login):
 
     nameservers = ['ns1.name.com', 'ns2.name.com', 'ns3.name.com', 'ns4.name.com']
     contacts = [{'type': ['registrant', 'administrative', 'technical', 'billing'],
-            'first_name': 'John',
-            'last_name': 'Doe',
+            'first_name': 'Tim',
+            'last_name': 'Jack',
             'organization': 'Name.com',
             'address_1': '100 Main St.',
             'address_2': 'Suite 300',
@@ -57,7 +57,7 @@ class API(Login):
             'country': 'US',
             'phone': '+1.3035555555',
             'fax': '+1.3035555556',
-            'email': 'h8964249jiahuan@163.com',
+            'email': 'iukep162872@163.com',
             }]
 
     def __init__(self):
@@ -133,6 +133,7 @@ class regThread(threading.Thread):
                 if(req=="suc"):
                     
                     res = api.reg(self.domain)
+                    break
                     if(res):
                         print(self.domain, "sale successful")
                         break
@@ -146,7 +147,7 @@ class regThread(threading.Thread):
                 if(t2 >= et):
                     break
                 # 控制请求次数，当请求次数大于200次时跳出循环
-                if(i >= 10) :
+                if(i >= 200) :
                     
                     break
                 time.sleep(0.5)
