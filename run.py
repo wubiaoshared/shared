@@ -17,7 +17,7 @@ import sql
 
 
 stime = "04:00:00"
-etime = "04:06:00"
+etime = "04:05:00"
 
 
 tz = pytz.timezone('Asia/Shanghai')
@@ -131,12 +131,8 @@ class regThread(threading.Thread):
                 print(req)
                 
                 if(req=="suc"):
-                    
-                    res = api.reg(self.domain)
                     break
-                    if(res):
-                        print(self.domain, "sale successful")
-                        break
+                    
                 if(req=="null"):
                     break
                 t2 = datetime.datetime.now(tz)
@@ -150,7 +146,7 @@ class regThread(threading.Thread):
                 if(i >= 200) :
                     
                     break
-                time.sleep(0.5)
+                
                 i = i + 1
                 # 控制请求次数，十分钟内不同时间请求次数快慢变化
                 if(tm >= 0 and tm < 1):
@@ -166,9 +162,19 @@ class regThread(threading.Thread):
                     time.sleep(1)
                 else:
                     break
-            print("break while loop")
+            print(self.domain,"break while loop")    
+            if(req=="suc"):
+                try:          
+                    res = api.reg(self.domain)
+                    if(res):
+                        print(self.domain, "sale successful")
+                    
+                except:
+                    print("request sale ",self.domain," but no retrun value ")
+                      
+            
             time.sleep(tms)
-            print("thread over")
+            print(self.domain,"thread over")
         doreg()
 
 
