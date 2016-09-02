@@ -149,7 +149,7 @@ class regThread(threading.Thread):
                 if(i >= 10) :
                     
                     break
-                time.sleep(0.5)
+                time.sleep(0.8)
                 i = i + 1
                 # 控制请求次数，十分钟内不同时间请求次数快慢变化
                 if(tm >= 0 and tm < 1):
