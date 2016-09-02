@@ -17,8 +17,13 @@ import  json
 from tldextract import extract
 import pytz
 from xml.dom import minidom
+<<<<<<< HEAD
+domains = ["zeeschool.in", "holytrip.in"] 
+st = datetime.datetime.strptime("2016-04-25 04:00:00", "%Y-%m-%d %H:%M:%S")
+=======
 domains = ["sch.org.in"] 
 st = datetime.datetime.strptime("2016-04-27 04:00:00", "%Y-%m-%d %H:%M:%S")
+>>>>>>> 5cf03cee413a2e6a22dd1c93284bcdea2a26a44a
 tz = pytz.timezone('Asia/Shanghai') 
 st = tz.localize(st)
 class regThread(threading.Thread):

@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <title>添加页面</title>
+		
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="assets/css/reset.css">
+        
+        <link rel="stylesheet" href="assets/css/style.css">
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+    </head>
+
+    <body>
+
+        <div class="page-container">
+            <h1>添加域名</h1>
+            <form action="insert.php" method="post">
+                <input type="text"  class="username" name="domain" placeholder="添加域名,支持.in co.in后缀">
+                <input type="text" name="date" id="date" class="password" >
+                <button type="submit">提交</button>
+                <div class="error"><span>+</span></div>
+            </form>
+            
+        </div>
+
+        <script>
+
+            function getLocalTime(i) {
+                    //参数i为时区值数字，比如北京为东八区则输进8,西5输入-5
+                    if (typeof i !== 'number') return;
+                    var d = new Date();
+                    //得到1970年一月一日到现在的秒数
+                    var len = d.getTime();
+                    //本地时间与GMT时间的时间偏移差
+                    var offset = d.getTimezoneOffset() * 60000;
+                    //得到现在的格林尼治时间
+                    var utcTime = len + offset;
+                    return new Date(utcTime + 3600000 * i);
+                }
+            
+            function GetDateStr(AddDayCount) { 
+                var dd = new Date(); 
+                dd=getLocalTime(8);
+                dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+                var y = dd.getFullYear(); 
+                var m = dd.getMonth()+1;//获取当前月份的日期 
+                var d = dd.getDate(); 
+                return y+"-"+m+"-"+d; 
+            } 
+            
+            document.getElementById("date").value=GetDateStr(1);
+            
+            
+            
+        </script>
+		
+        <!-- Javascript -->
+        <script src="assets/js/jquery-1.8.2.min.js"></script>
+        
+        <script src="assets/js/scripts.js"></script>
+
+    </body>
+
+</html>
+
+

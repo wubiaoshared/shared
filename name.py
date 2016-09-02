@@ -14,10 +14,10 @@ import sys
 from tldextract import extract
 import sql
 
-domains = []
 
-stime = "03:57:00"
-etime = "04:07:00"
+
+stime = "03:58:00"
+etime = "19:06:00"
 
 
 tz = pytz.timezone('Asia/Shanghai')
@@ -45,20 +45,20 @@ class API(Login):
     # api_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcGl0Ijo1NjE4NjgsImV4cCI6MTc4NTg1NzUzNiwianRpIjoxfQ.bMwNLDloRoOuhYPGvpGwl3dIYPkokIzU_FZrMgEmIL8';
 
     nameservers = ['ns1.name.com', 'ns2.name.com', 'ns3.name.com', 'ns4.name.com']
-    # contacts = [{'type': ['registrant', 'administrative', 'technical', 'billing'],
-    #         'first_name': 'John',
-    #         'last_name': 'Doe',
-    #         'organization': 'Name.com',
-    #         'address_1': '100 Main St.',
-    #         'address_2': 'Suite 300',
-    #         'city': 'Denver',
-    #         'state': 'CO',
-    #         'zip': '80230',
-    #         'country': 'US',
-    #         'phone': '+1.3035555555',
-    #         'fax': '+1.3035555556',
-    #         'email': 'h8964249jiahuan@163.com',
-    #         }]
+    contacts = [{'type': ['registrant', 'administrative', 'technical', 'billing'],
+            'first_name': 'John',
+            'last_name': 'Doe',
+            'organization': 'Name.com',
+            'address_1': '100 Main St.',
+            'address_2': 'Suite 300',
+            'city': 'Denver',
+            'state': 'CO',
+            'zip': '80230',
+            'country': 'US',
+            'phone': '+1.3035555555',
+            'fax': '+1.3035555556',
+            'email': 'h8964249jiahuan@163.com',
+            }]
 
     def __init__(self):
 
@@ -69,7 +69,7 @@ class API(Login):
     # 使用API注册域名
     def check(self, domain):
         subdomain, maindomain, tld = extract(domain)
-        param = {"keyword":maindomain, "tlds":[tld], "services":["availability", "suggested"]}
+        param = {"keyword":maindomain, "tlds":[tld], "services":["availability"]}
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
         res = requests.session().post("https://api.name.com/api/domain/check", data=json.dumps(param), headers=headers, timeout=10)
         print(res.text)
@@ -78,21 +78,21 @@ class API(Login):
             print(result)
         except:
             print("tlds not find")
-            return False
+            return "null";
         
         if(result):
             print(domain + " check success")
-            return True
+            return "suc"
         else:
             print(domain + " check fail")
-            return False
+            return "fail"
 
     # 使用API注册域名
     def reg(self, domain):
         param = {'domain_name' : domain,
                 'period' : 1 ,
                 'nameservers': self.nameservers,
-                # 'contacts': self.contacts,
+                'contacts': self.contacts,
                 }
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
         res = requests.session().post("https://api.name.com/api/domain/create", data=json.dumps(param), headers=headers, timeout=10)
@@ -122,23 +122,22 @@ class regThread(threading.Thread):
             et = tz.localize(et)
             st = datetime.datetime.strptime(strday + " " + stime, "%Y-%m-%d %H:%M:%S")
             st = tz.localize(st)
-            tm = (et - st).seconds
+            tms = (et - st).seconds
             print(self.domain, "now:", t1, "start request")
             while 1 :
 
                 req = api.check(self.domain)
                 
-
-                if(req):
-                    for j in range(1,2):
-                        res = api.reg(self.domain)
-                        if(res):
-                            print(self.domain, "sale sucessful")
-                            break
-     
+                print(req)
+                
+                if(req=="suc"):
                     
+                    res = api.reg(self.domain)
+                    if(res):
+                        print(self.domain, "sale successful")
+                        break
+                if(req=="null"):
                     break
-
                 t2 = datetime.datetime.now(tz)
                 print(self.domain, "register time", t2, "requests", i, "times")
                 tm = (t2 - t1).seconds / (60)
@@ -146,11 +145,11 @@ class regThread(threading.Thread):
                 # 控制时间当到结束时间时跳出循环
                 if(t2 >= et):
                     break
-                # 控制请求次数，当请求次数大于200次时休眠五分钟
-                if(i >= 200) :
+                # 控制请求次数，当请求次数大于200次时跳出循环
+                if(i >= 10) :
                     
                     break
-                time.sleep(1)
+                time.sleep(0.5)
                 i = i + 1
                 # 控制请求次数，十分钟内不同时间请求次数快慢变化
                 if(tm >= 0 and tm < 1):
@@ -163,11 +162,12 @@ class regThread(threading.Thread):
                 elif(tm >= 5 and tm < 6):
                     time.sleep(1)
                 elif(tm >= 6 and tm < 10):
-                    time.sleep(5)
+                    time.sleep(1)
                 else:
                     break
-            
-            time.sleep(tm)
+            print("break while loop")
+            time.sleep(tms)
+            print("thread over")
         doreg()
 
 
@@ -185,6 +185,7 @@ def checktime():
         et = tz.localize(et)
         # print(st)
         # print(et)
+        # domains = []
         now = datetime.datetime.now(tz)
 
         if now >= st and now <= et:

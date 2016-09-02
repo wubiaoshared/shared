@@ -4,9 +4,10 @@ import pytz
 import datetime
 
 tz = pytz.timezone('Asia/Shanghai')
-domains=[]
+
 
 def getDomains():
+    domains=[]
     strday=datetime.datetime.now(tz).strftime('%Y-%m-%d')
     conn=pymysql.connect(host='127.0.0.1',user='root',passwd='wb123456',db='name',port=3306)
     cur=conn.cursor()
