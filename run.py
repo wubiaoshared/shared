@@ -16,7 +16,7 @@ import sql
 
 
 
-stime = "04:00:00"
+stime = "03:59:00"
 etime = "04:05:00"
 
 
@@ -150,14 +150,14 @@ class regThread(threading.Thread):
                 i = i + 1
                 # 控制请求次数，十分钟内不同时间请求次数快慢变化
                 if(tm >= 0 and tm < 1):
-                    time.sleep(2.5)
+                    time.sleep(3)
                 elif(tm >= 1 and tm < 3):
                     time.sleep(0.8)
 
                 elif(tm >= 3 and tm < 5):
                     time.sleep(1)
                 elif(tm >= 5 and tm < 6):
-                    time.sleep(2)
+                    time.sleep(3)
                 elif(tm >= 6 and tm < 10):
                     time.sleep(5)
                 else:
