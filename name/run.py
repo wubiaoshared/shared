@@ -16,8 +16,8 @@ import sql
 
 
 
-stime = "03:58:00"
-etime = "19:06:00"
+stime = "03:59:00"
+etime = "04:05:00"
 
 
 tz = pytz.timezone('Asia/Shanghai')
@@ -46,8 +46,8 @@ class API(Login):
 
     nameservers = ['ns1.name.com', 'ns2.name.com', 'ns3.name.com', 'ns4.name.com']
     contacts = [{'type': ['registrant', 'administrative', 'technical', 'billing'],
-            'first_name': 'John',
-            'last_name': 'Doe',
+            'first_name': 'njl',
+            'last_name': 'nvp',
             'organization': 'Name.com',
             'address_1': '100 Main St.',
             'address_2': 'Suite 300',
@@ -57,7 +57,7 @@ class API(Login):
             'country': 'US',
             'phone': '+1.3035555555',
             'fax': '+1.3035555556',
-            'email': 'h8964249jiahuan@163.com',
+            'email': 'njlnvp26022@163.com',
             }]
 
     def __init__(self):
@@ -95,13 +95,17 @@ class API(Login):
                 'contacts': self.contacts,
                 }
         headers = {'Api-Username':self.username, 'Api-Token':self.api_token, 'Api-Session-Token':self.session_token}
-        res = requests.session().post("https://api.name.com/api/domain/create", data=json.dumps(param), headers=headers, timeout=10)
-        code = json.loads(res.text)['result']['code']
-        print(res.text)
-        if(code == 100):
-            return True
-        else:
-            return False
+        for i in range(1,3):
+            try:
+                res = requests.session().post("https://api.name.com/api/domain/create", data=json.dumps(param), headers=headers, timeout=10)
+                print(res.text)
+                code = json.loads(res.text)['result']['code']
+                print(code)
+            except:
+                
+                print(self.domain," sale success")
+                break
+        
 # 使用多线程注册
 class regThread(threading.Thread):
     def __init__(self, domain):
@@ -131,11 +135,8 @@ class regThread(threading.Thread):
                 print(req)
                 
                 if(req=="suc"):
+                    break
                     
-                    res = api.reg(self.domain)
-                    if(res):
-                        print(self.domain, "sale successful")
-                        break
                 if(req=="null"):
                     break
                 t2 = datetime.datetime.now(tz)
@@ -146,28 +147,33 @@ class regThread(threading.Thread):
                 if(t2 >= et):
                     break
                 # 控制请求次数，当请求次数大于200次时跳出循环
-                if(i >= 10) :
+                if(i >= 200) :
                     
                     break
-                time.sleep(0.8)
+                
                 i = i + 1
                 # 控制请求次数，十分钟内不同时间请求次数快慢变化
                 if(tm >= 0 and tm < 1):
                     time.sleep(3)
                 elif(tm >= 1 and tm < 3):
-                    time.sleep(1)
+                    time.sleep(0.8)
 
                 elif(tm >= 3 and tm < 5):
                     time.sleep(1)
                 elif(tm >= 5 and tm < 6):
-                    time.sleep(1)
+                    time.sleep(3)
                 elif(tm >= 6 and tm < 10):
-                    time.sleep(1)
+                    time.sleep(5)
                 else:
                     break
-            print("break while loop")
+            print(self.domain,"break while loop")    
+            if(req=="suc"):
+                         
+                res = api.reg(self.domain)
+                    
+            
             time.sleep(tms)
-            print("thread over")
+            print(self.domain,"thread over")
         doreg()
 
 
